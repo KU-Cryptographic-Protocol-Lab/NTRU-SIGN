@@ -1,1 +1,1 @@
-# NTRU-SIGN
+# NTRU+SIGN
