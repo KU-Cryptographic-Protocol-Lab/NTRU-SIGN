@@ -1046,44 +1046,44 @@ static const complex_fp64_32 fft_zetas[1296] = {
 #endif
 static inline int64_t _mulrnd32(const int64_t x, const int64_t y)
 {
-    __int128_t r = ((__int128_t)x * (__int128_t)y) + (1 << 31);
-    return r >> 32;
+	__int128_t r = ((__int128_t)x * (__int128_t)y) + (1 << 31);
+	return r >> 32;
 }
 
 static inline int64_t _complex_mul_real(const complex_fp64_32 x, const complex_fp64_32 y)
 {
-    return _mulrnd32(x.real, y.real) - _mulrnd32(x.imag, y.imag);
+	return _mulrnd32(x.real, y.real) - _mulrnd32(x.imag, y.imag);
 }
 
 static inline int64_t _complex_mul_imag(const complex_fp64_32 x, const complex_fp64_32 y)
 {
-    return _mulrnd32(x.real, y.imag) + _mulrnd32(x.imag, y.real);
+	return _mulrnd32(x.real, y.imag) + _mulrnd32(x.imag, y.real);
 }
 
 static void _complex_mul(complex_fp64_32 *r, const complex_fp64_32 x, const complex_fp64_32 y)
 {
-    r->real = _complex_mul_real(x, y);
-    r->imag = _complex_mul_imag(x, y);
+	r->real = _complex_mul_real(x, y);
+	r->imag = _complex_mul_imag(x, y);
 }
 
 int64_t complex_fp_sqabs(complex_fp64_32 x)
 {
-    return _mulrnd32(x.real, x.real) + _mulrnd32(x.imag, x.imag);
+	return _mulrnd32(x.real, x.real) + _mulrnd32(x.imag, x.imag);
 }
 
 void fft_init(complex_fp64_32 r[NTRUPLUS_N], const poly *a) 
 {
-    for(int i = 0; i < NTRUPLUS_N; i++)
-    {
-        r[i].real = ((int64_t) a->coeffs[i]) << 32;
-        r[i].imag = 0;
-    }
+	for(int i = 0; i < NTRUPLUS_N; i++)
+	{
+		r[i].real = ((int64_t) a->coeffs[i]) << 32;
+		r[i].imag = 0;
+	}
 }
 
 #ifdef PARAM_1
 void fft(complex_fp64_32 data[NTRUPLUS_N])
 {
-    complex_fp64_32 t1, t2, t3;
+    	complex_fp64_32 t1, t2, t3;
 	complex_fp64_32 zeta1, zeta2;
 	int k = 1;
 
@@ -1092,61 +1092,61 @@ void fft(complex_fp64_32 data[NTRUPLUS_N])
 	for(int i = 0; i < NTRUPLUS_N/2; i++)
 	{
 		_complex_mul(&t1, zeta1, data[i + 384]);
-
-        data[i + 384].real = data[i].real - t1.real + data[i + 384].real;
-        data[i + 384].imag = data[i].imag - t1.imag + data[i + 384].imag;
-        data[i      ].real = data[i].real + t1.real;
-        data[i      ].imag = data[i].imag + t1.imag;
+		
+		data[i + 384].real = data[i].real - t1.real + data[i + 384].real;
+		data[i + 384].imag = data[i].imag - t1.imag + data[i + 384].imag;
+		data[i      ].real = data[i].real + t1.real;
+		data[i      ].imag = data[i].imag + t1.imag;
 	}
 
-    for(int start = 0; start < NTRUPLUS_N; start += 384)
-    {
-        zeta1 = fft_zetas[k++];
-        zeta2 = fft_zetas[k++];
+	for(int start = 0; start < NTRUPLUS_N; start += 384)
+    	{
+	        zeta1 = fft_zetas[k++];
+	        zeta2 = fft_zetas[k++];
 
-        for(int i = start; i < start + 128; i++)
-        {
-            _complex_mul(&t1, zeta1, data[i + 128]);
-            _complex_mul(&t2, zeta2, data[i + 256]);
-
-            t3.real = t1.real - t2.real;
-            t3.imag = t1.imag - t2.imag;
-
-            _complex_mul(&t3, fft_omega, t3);
-
-            data[i + 256].real = data[i].real - t1.real - t3.real;
-            data[i + 256].imag = data[i].imag - t1.imag - t3.imag;
-            data[i + 128].real = data[i].real - t2.real + t3.real;
-            data[i + 128].imag = data[i].imag - t2.imag + t3.imag;
-            data[i      ].real = data[i].real + t1.real + t2.real;
-            data[i      ].imag = data[i].imag + t1.imag + t2.imag;
-        }
-    }	
+		for(int i = start; i < start + 128; i++)
+	        {
+			_complex_mul(&t1, zeta1, data[i + 128]);
+			_complex_mul(&t2, zeta2, data[i + 256]);
+			
+			t3.real = t1.real - t2.real;
+			t3.imag = t1.imag - t2.imag;
+			
+			_complex_mul(&t3, fft_omega, t3);
+			
+			data[i + 256].real = data[i].real - t1.real - t3.real;
+			data[i + 256].imag = data[i].imag - t1.imag - t3.imag;
+			data[i + 128].real = data[i].real - t2.real + t3.real;
+			data[i + 128].imag = data[i].imag - t2.imag + t3.imag;
+			data[i      ].real = data[i].real + t1.real + t2.real;
+			data[i      ].imag = data[i].imag + t1.imag + t2.imag;
+	        }
+    	}	
 
 	for(int step = 64; step >= 1; step >>= 1)
 	{
 		for(int start = 0; start < NTRUPLUS_N; start += (step << 1))
 		{
 			zeta1 = fft_zetas[k++];
-
+	
 			for(int i = start; i < start + step; i++)
 			{
-		                _complex_mul(&t1, zeta1, data[i + step]);
+				_complex_mul(&t1, zeta1, data[i + step]);
 		
-		                data[i + step].real = data[i].real - t1.real;
-		                data[i + step].imag = data[i].imag - t1.imag;
-		                data[i       ].real = data[i].real + t1.real;
-		                data[i       ].imag = data[i].imag + t1.imag;
+				data[i + step].real = data[i].real - t1.real;
+				data[i + step].imag = data[i].imag - t1.imag;
+				data[i       ].real = data[i].real + t1.real;
+				data[i       ].imag = data[i].imag + t1.imag;
 			}
 		}
-    	}
+	}
 }
 #endif
 
 #ifdef PARAM_3
 void fft(complex_fp64_32 data[NTRUPLUS_N])
 {
-    complex_fp64_32 t1, t2, t3;
+	complex_fp64_32 t1, t2, t3;
 	complex_fp64_32 zeta1, zeta2;
 	int k = 1;
 
@@ -1156,10 +1156,10 @@ void fft(complex_fp64_32 data[NTRUPLUS_N])
 	{
 		_complex_mul(&t1, zeta1, data[i + 648]);
 
-        data[i + 648].real = data[i].real - t1.real + data[i + 648].real;
-        data[i + 648].imag = data[i].imag - t1.imag + data[i + 648].imag;
-        data[i      ].real = data[i].real + t1.real;
-        data[i      ].imag = data[i].imag + t1.imag;
+	        data[i + 648].real = data[i].real - t1.real + data[i + 648].real;
+	        data[i + 648].imag = data[i].imag - t1.imag + data[i + 648].imag;
+	        data[i      ].real = data[i].real + t1.real;
+	        data[i      ].imag = data[i].imag + t1.imag;
 	}
 
 	for(int step = 216; step >= 8; step = step/3)
