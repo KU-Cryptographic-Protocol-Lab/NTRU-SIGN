@@ -1071,10 +1071,6 @@ int64_t complex_fp_sqabs(complex_fp64_32 x)
     return _mulrnd32(x.real, x.real) + _mulrnd32(x.imag, x.imag);
 }
 
-/****************************************************************************
- * To generate values in Phython:
- *   brv8 = [int(f"{t:08b}"[::-1],2) for t in range(2**8)]
- ****************************************************************************/
 void fft_init(complex_fp64_32 r[NTRUPLUS_N], const poly *a) 
 {
     for(int i = 0; i < NTRUPLUS_N; i++)
@@ -1135,15 +1131,15 @@ void fft(complex_fp64_32 data[NTRUPLUS_N])
 
 			for(int i = start; i < start + step; i++)
 			{
-                _complex_mul(&t1, zeta1, data[i + step]);
-
-                data[i + step].real = data[i].real - t1.real;
-                data[i + step].imag = data[i].imag - t1.imag;
-                data[i       ].real = data[i].real + t1.real;
-                data[i       ].imag = data[i].imag + t1.imag;
+		                _complex_mul(&t1, zeta1, data[i + step]);
+		
+		                data[i + step].real = data[i].real - t1.real;
+		                data[i + step].imag = data[i].imag - t1.imag;
+		                data[i       ].real = data[i].real + t1.real;
+		                data[i       ].imag = data[i].imag + t1.imag;
 			}
 		}
-    }
+    	}
 }
 #endif
 
@@ -1191,7 +1187,7 @@ void fft(complex_fp64_32 data[NTRUPLUS_N])
 				data[i      ].imag = data[i].imag + t1.imag + t2.imag;
 			}		
 		}
-    }	
+    	}	
 	
 	for(int step = 4; step >= 1; step >>= 1)
 	{
@@ -1201,12 +1197,12 @@ void fft(complex_fp64_32 data[NTRUPLUS_N])
 
 			for(int i = start; i < start + step; i++)
 			{
-                _complex_mul(&t1, zeta1, data[i + step]);
-
-                data[i + step].real = data[i].real - t1.real;
-                data[i + step].imag = data[i].imag - t1.imag;
-                data[i       ].real = data[i].real + t1.real;
-                data[i       ].imag = data[i].imag + t1.imag;
+		                _complex_mul(&t1, zeta1, data[i + step]);
+		
+		                data[i + step].real = data[i].real - t1.real;
+		                data[i + step].imag = data[i].imag - t1.imag;
+		                data[i       ].real = data[i].real + t1.real;
+		                data[i       ].imag = data[i].imag + t1.imag;
 			}
 		}
 	}
