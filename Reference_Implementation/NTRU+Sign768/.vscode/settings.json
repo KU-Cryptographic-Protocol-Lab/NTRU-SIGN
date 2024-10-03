@@ -1,0 +1,17 @@
+{
+    "files.associations": {
+        "random": "c",
+        "hash_map": "c",
+        "chrono": "c",
+        "algorithm": "c",
+        "stdint.h": "c",
+        "params.h": "c",
+        "randombytes.h": "c",
+        "evp.h": "c",
+        "packing.h": "c",
+        "stdlib.h": "c",
+        "bio.h": "c",
+        "reduce.h": "c",
+        "stdio.h": "c"
+    }
+}
