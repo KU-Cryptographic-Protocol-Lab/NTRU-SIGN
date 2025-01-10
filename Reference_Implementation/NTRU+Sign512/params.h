@@ -1,7 +1,7 @@
 #ifndef PARAMS_H
 #define PARAMS_H
 
-#define PARAM_2
+#define PARAM_1
 #define NTT_s
 
 #define SEEDBYTES 32
